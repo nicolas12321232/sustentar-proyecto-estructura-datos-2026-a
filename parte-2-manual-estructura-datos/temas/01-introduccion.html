@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introducción a las Estructuras de Datos</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            background:
+                linear-gradient(rgba(15, 23, 42, 0.9),
+                    rgba(15, 23, 42, 0.95)),
+                url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+
+        .hero-text {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        .btn-custom {
+            background: #aec90c;
+            border: none;
+            color: #111827;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            background: #d2ef1c;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            width: 80px;
+            height: 4px;
+            background: #aec90c;
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            border-radius: 50px;
+        }
+
+        .card-custom {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: 0.3s;
+            height: 100%;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-6px);
+            border-color: #aec90c;
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(174, 201, 12, 0.15);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .icon-box i {
+            font-size: 2rem;
+            color: #aec90c;
+        }
+
+        .accordion-button {
+            background: #1e293b;
+            color: white;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: #aec90c;
+            color: #111827;
+        }
+
+        .accordion-body {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .example-step {
+            border-left: 4px solid #aec90c;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .challenge-box {
+            background: linear-gradient(135deg, #1e293b, #111827);
+            border-radius: 18px;
+            padding: 25px;
+            height: 100%;
+            border: 1px solid rgba(174, 201, 12, 0.2);
+        }
+
+        .video-container {
+            background: #1e293b;
+            border: 2px dashed #aec90c;
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        footer {
+            background: #020617;
+            color: #94a3b8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-diagram-3-fill text-warning"></i>
+                Estructuras de Datos
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#documentacion">Documentación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ejemplos">Ejemplos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#retos">Retos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#video">Video</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-lg-7">
+                    <span class="badge bg-success-subtle text-success mb-3 p-2">
+                        Tema 1
+                    </span>
+
+                    <h1 class="hero-title">
+                        Introducción a las
+                        <span style="color:#aec90c;">
+                            Estructuras de Datos
+                        </span>
+                    </h1>
+
+                    <p class="hero-text mt-4">
+                        Aprende los conceptos fundamentales de las estructuras de datos,
+                        su importancia en programación y cómo permiten organizar la información
+                        de manera eficiente.
+                    </p>
+
+                    <div class="mt-4">
+                        <a href="#documentacion" class="btn btn-custom">
+                            Comenzar
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DOCUMENTACION -->
+    <section id="documentacion" class="py-5">
+        <div class="container">
+
+            <h2 class="section-title">
+                Pantalla de Documentación
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-custom p-4">
+                        <div class="icon-box">
+                            <i class="bi bi-book-half"></i>
+                        </div>
+
+                        <h4>Definición</h4>
+
+                        <p>
+                            Las estructuras de datos son formas organizadas de almacenar,
+                            administrar y manipular información dentro de un sistema computacional.
+                            Permiten acceder y modificar los datos de manera eficiente.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-custom p-4">
+                        <div class="icon-box">
+                            <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+
+                        <h4>Utilidad</h4>
+
+                        <p>
+                            Facilitan la optimización de procesos, mejoran el rendimiento de
+                            las aplicaciones y permiten resolver problemas complejos de manera
+                            organizada.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-custom p-4">
+                        <div class="icon-box">
+                            <i class="bi bi-cpu-fill"></i>
+                        </div>
+
+                        <h4>Características</h4>
+
+                        <ul>
+                            <li>Organización eficiente</li>
+                            <li>Acceso rápido a datos</li>
+                            <li>Optimización de memoria</li>
+                            <li>Escalabilidad</li>
+                            <li>Reutilización de información</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card-custom p-4">
+                        <div class="icon-box">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+
+                        <h4>Representación</h4>
+
+                        <p>
+                            Las estructuras de datos pueden representarse mediante arreglos,
+                            listas enlazadas, pilas, colas, árboles y grafos.
+                        </p>
+
+                        <img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png"
+                            class="img-fluid mt-3" width="180">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card-custom p-4">
+                        <div class="icon-box">
+                            <i class="bi bi-gear-wide-connected"></i>
+                        </div>
+
+                        <h4>Casos de Uso</h4>
+
+                        <ul>
+                            <li>Gestión de bases de datos</li>
+                            <li>Sistemas operativos</li>
+                            <li>Redes sociales</li>
+                            <li>Aplicaciones móviles</li>
+                            <li>Videojuegos</li>
+                            <li>Algoritmos de búsqueda</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- EJEMPLOS -->
+    <section id="ejemplos" class="py-5 bg-dark">
+        <div class="container">
+
+            <h2 class="section-title">
+                Pantalla de Ejemplos
+            </h2>
+
+            <div class="accordion" id="accordionExample">
+
+                <!-- EJEMPLO 1 -->
+                <div class="accordion-item bg-dark border-0 mb-3">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#ejemplo1">
+
+                            Ejemplo 1 - Uso de un Arreglo
+                        </button>
+                    </h2>
+
+                    <div id="ejemplo1"
+                        class="accordion-collapse collapse"
+                        data-bs-parent="#accordionExample">
+
+                        <div class="accordion-body">
+
+                            <p>
+                                Un arreglo permite almacenar múltiples elementos
+                                del mismo tipo.
+                            </p>
+
+                            <div class="example-step">
+                                <h6>Paso 1</h6>
+                                <p>
+                                    Crear un arreglo de números:
+                                </p>
+
+<pre><code>
+int numeros[5] = {10,20,30,40,50};
+</code></pre>
+                            </div>
+
+                            <div class="example-step">
+                                <h6>Paso 2</h6>
+                                <p>
+                                    Acceder al primer elemento:
+                                </p>
+
+<pre><code>
+numeros[0] = 10
+</code></pre>
+                            </div>
+
+                            <div class="example-step">
+                                <h6>Paso 3</h6>
+                                <p>
+                                    Recorrer el arreglo utilizando un ciclo.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EJEMPLO 2 -->
+                <div class="accordion-item bg-dark border-0">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#ejemplo2">
+
+                            Ejemplo 2 - Uso de una Pila
+                        </button>
+                    </h2>
+
+                    <div id="ejemplo2"
+                        class="accordion-collapse collapse"
+                        data-bs-parent="#accordionExample">
+
+                        <div class="accordion-body">
+
+                            <p>
+                                Una pila funciona bajo el principio LIFO
+                                (Last In, First Out).
+                            </p>
+
+                            <div class="example-step">
+                                <h6>Paso 1</h6>
+                                <p>
+                                    Insertar elementos en la pila:
+                                </p>
+
+<pre><code>
+Push(5)
+Push(10)
+Push(15)
+</code></pre>
+                            </div>
+
+                            <div class="example-step">
+                                <h6>Paso 2</h6>
+                                <p>
+                                    El último elemento ingresado es el primero en salir.
+                                </p>
+
+<pre><code>
+Pop() -> 15
+</code></pre>
+                            </div>
+
+                            <div class="example-step">
+                                <h6>Paso 3</h6>
+                                <p>
+                                    La pila queda con los valores 5 y 10.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- RETOS -->
+    <section id="retos" class="py-5">
+        <div class="container">
+
+            <h2 class="section-title">
+                Pantalla de Retos
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-lg-6">
+                    <div class="challenge-box">
+
+                        <h4>
+                            <i class="bi bi-code-slash text-warning"></i>
+                            Reto 1
+                        </h4>
+
+                        <p class="mt-3">
+                            Crear un arreglo con 10 números enteros y mostrar
+                            únicamente los números pares.
+                        </p>
+
+                        <hr>
+
+                        <h6>Pistas:</h6>
+
+                        <ul>
+                            <li>Usa un ciclo for.</li>
+                            <li>Aplica el operador módulo (%).</li>
+                            <li>Guarda los números en un arreglo.</li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="challenge-box">
+
+                        <h4>
+                            <i class="bi bi-puzzle-fill text-warning"></i>
+                            Reto 2
+                        </h4>
+
+                        <p class="mt-3">
+                            Simular una pila donde el usuario pueda agregar y
+                            eliminar elementos.
+                        </p>
+
+                        <hr>
+
+                        <h6>Pistas:</h6>
+
+                        <ul>
+                            <li>Implementa funciones Push y Pop.</li>
+                            <li>Usa un arreglo para almacenar datos.</li>
+                            <li>Recuerda el comportamiento LIFO.</li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="video" class="py-5 bg-dark">
+        <div class="container">
+
+            <h2 class="section-title">
+                Clip Explicativo
+            </h2>
+
+            <div class="video-container">
+
+                <i class="bi bi-play-circle-fill"
+                    style="font-size: 5rem; color:#aec90c;"></i>
+
+                <h3 class="mt-4">
+                    Espacio para Video Explicativo
+                </h3>
+
+                <p class="text-light mt-3">
+                    Aquí puedes insertar el video realizado por el equipo
+                    utilizando YouTube, Vimeo o archivo local.
+                </p>
+
+                <!-- ESPACIO PARA VIDEO -->
+                <!--
+                    Ejemplo:
+
+                    <iframe width="100%" height="500"
+                    src="LINK_DEL_VIDEO"
+                    frameborder="0"
+                    allowfullscreen></iframe>
+                -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-4">
+        <div class="container text-center">
+
+            <p class="mb-1">
+                Proyecto Académico - Estructuras de Datos
+            </p>
+
+            <small>
+                Diseñado con HTML, Bootstrap y JavaScript
+            </small>
+
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
