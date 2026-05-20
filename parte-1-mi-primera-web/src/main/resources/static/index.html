@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Turnos</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; }
+        input, select { padding: 8px; margin: 5px 0; width: calc(100% - 16px); }
+        button { background-color: #28a745; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #218838; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Administración de Turnos</h1>
+
+    <div class="card">
+        <h2>1. Registrar Persona</h2>
+        <input type="text" id="nombrePersona" placeholder="Nombre completo">
+        <input type="email" id="correoPersona" placeholder="Correo electrónico">
+        <input type="text" id="docPersona" placeholder="Número de Documento">
+        <button onclick="guardarPersona()">Guardar Persona</button>
+    </div>
+
+    <div class="card">
+        <h2>2. Registrar Categoría de Turno</h2>
+        <input type="text" id="nombreCategoria" placeholder="Nombre de la categoría (Ej. Medicina General)">
+        <input type="text" id="descCategoria" placeholder="Descripción">
+        <button onclick="guardarCategoria()">Guardar Categoría</button>
+    </div>
+
+    <div class="card">
+        <h2>3. Separar Turno</h2>
+        <select id="selectPersona"><option value="">Cargando personas...</option></select>
+        <select id="selectCategoria"><option value="">Cargando categorías...</option></select>
+        <button onclick="crearTurno()">Crear Turno</button>
+    </div>
+
+    <div class="card">
+        <h2>4. Listado de Turnos</h2>
+        <button onclick="cargarTurnos()" style="background-color: #007bff;">Actualizar Lista</button>
+        <table id="tablaTurnos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Persona</th>
+                    <th>Categoría</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8080/api';
+
+    // Función para guardar persona usando Axios
+    async function guardarPersona() {
+        const persona = {
+            nombre: document.getElementById('nombrePersona').value,
+            correo: document.getElementById('correoPersona').value,
+            numeroDocumento: document.getElementById('docPersona').value
+        };
+        try {
+            await axios.post(`${API_BASE_URL}/personas`, persona);
+            alert('Persona registrada con éxito');
+            cargarSelects(); // Actualizamos la lista del select
+        } catch (error) {
+            console.error("Error al guardar persona:", error);
+            alert('Error al guardar la persona');
+        }
+    }
+
+    // Función para guardar categoría
+    async function guardarCategoria() {
+        const categoria = {
+            nombre: document.getElementById('nombreCategoria').value,
+            descripcion: document.getElementById('descCategoria').value
+        };
+        try {
+            await axios.post(`${API_BASE_URL}/categorias`, categoria);
+            alert('Categoría registrada con éxito');
+            cargarSelects(); // Actualizamos la lista del select
+        } catch (error) {
+            console.error("Error al guardar categoría:", error);
+            alert('Error al guardar la categoría');
+        }
+    }
+
+    // Cargar los selects de Persona y Categoría
+    async function cargarSelects() {
+        try {
+            const personasRes = await axios.get(`${API_BASE_URL}/personas`);
+            const categoriasRes = await axios.get(`${API_BASE_URL}/categorias`);
+
+            const selectPersona = document.getElementById('selectPersona');
+            const selectCategoria = document.getElementById('selectCategoria');
+
+            selectPersona.innerHTML = '<option value="">Seleccione una persona...</option>';
+            personasRes.data.forEach(p => {
+                selectPersona.innerHTML += `<option value="${p.id}">${p.nombre} (${p.numeroDocumento})</option>`;
+            });
+
+            selectCategoria.innerHTML = '<option value="">Seleccione una categoría...</option>';
+            categoriasRes.data.forEach(c => {
+                selectCategoria.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+            });
+        } catch (error) {
+            console.error("Error al cargar datos:", error);
+        }
+    }
+
+    // Crear un Turno
+    async function crearTurno() {
+        const personaId = document.getElementById('selectPersona').value;
+        const categoriaId = document.getElementById('selectCategoria').value;
+
+        if (!personaId || !categoriaId) {
+            alert("Por favor seleccione una persona y una categoría");
+            return;
+        }
+
+        const turno = {
+            persona: { id: personaId },
+            categoriaTurno: { id: categoriaId }
+        };
+
+        try {
+            await axios.post(`${API_BASE_URL}/turnos`, turno);
+            alert('Turno separado con éxito');
+            cargarTurnos();
+        } catch (error) {
+            console.error("Error al crear turno:", error);
+            alert('Error al crear el turno');
+        }
+    }
+
+    // Cargar y mostrar la lista de Turnos (Requisito 5)
+    async function cargarTurnos() {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/turnos`);
+            const tbody = document.querySelector('#tablaTurnos tbody');
+            tbody.innerHTML = ''; // Limpiamos la tabla
+
+            res.data.forEach(turno => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${turno.id}</td>
+                        <td>${turno.persona ? turno.persona.nombre : 'N/A'}</td>
+                        <td>${turno.categoriaTurno ? turno.categoriaTurno.nombre : 'N/A'}</td>
+                        <td><strong>${turno.estado}</strong></td>
+                        <td>
+                            <button onclick="cambiarEstadoTurno(${turno.id}, 'EN_ESPERA')" style="background-color: #ffc107; color: black;">Espera</button>
+                            <button onclick="cambiarEstadoTurno(${turno.id}, 'ATENDIDO')" style="background-color: #17a2b8;">Atender</button>
+                            <button onclick="cambiarEstadoTurno(${turno.id}, 'CANCELADO')" style="background-color: #dc3545;">Cancelar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (error) {
+            console.error("Error al cargar turnos:", error);
+        }
+    }
+
+    // Cambiar estado de un turno (Requisito 4)
+    async function cambiarEstadoTurno(id, nuevoEstado) {
+        try {
+            await axios.put(`${API_BASE_URL}/turnos/${id}/estado?nuevoEstado=${nuevoEstado}`);
+            cargarTurnos(); // Recargamos la tabla
+        } catch (error) {
+            console.error("Error al cambiar estado:", error);
+            alert('Error al cambiar el estado');
+        }
+    }
+
+    // Al cargar la página por primera vez, ejecutamos estas funciones
+    window.onload = () => {
+        cargarSelects();
+        cargarTurnos();
+    };
+</script>
+
+</body>
+</html>
