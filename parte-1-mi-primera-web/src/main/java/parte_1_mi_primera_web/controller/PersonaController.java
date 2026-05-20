@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/personas")
-@CrossOrigin(origins = "*") // Esto es súper importante para que Axios no tenga errores de conexión luego
+@CrossOrigin(origins = "*") 
 public class PersonaController {
 
     @Autowired
